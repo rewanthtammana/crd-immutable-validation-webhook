@@ -1,82 +1,47 @@
-# immutable-validation-webhook
-// TODO(user): Add simple overview of use/purpose
+# crd-validation-with-webhook
 
-## Description
-// TODO(user): An in-depth paragraph about your project and overview of use
+## Setup
 
-## Getting Started
-You’ll need a Kubernetes cluster to run against. You can use [KIND](https://sigs.k8s.io/kind) to get a local cluster for testing, or run against a remote cluster.
-**Note:** Your controller will automatically use the current context in your kubeconfig file (i.e. whatever cluster `kubectl cluster-info` shows).
+### Install cert manager for certificates
 
-### Running on the cluster
-1. Install Instances of Custom Resources:
-
-```sh
-kubectl apply -f config/samples/
+```bash
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.9.1/cert-manager.yaml
 ```
 
-2. Build and push your image to the location specified by `IMG`:
-	
-```sh
-make docker-build docker-push IMG=<some-registry>/immutable-validation-webhook:tag
-```
-	
-3. Deploy the controller to the cluster with the image specified by `IMG`:
+### Scaffold custom CRDs
 
-```sh
-make deploy IMG=<some-registry>/immutable-validation-webhook:tag
+```bash
+kubebuilder init --domain rewanthtammana.com --license none --owner "rewanthtammana" --plugins=go/v4-alpha
+kubebuilder create api --version v1 --group validate --kind ImmutableKind
+kubebuilder create webhook --group validate --version v1 --kind ImmutableKind --programmatic-validation
 ```
 
-### Uninstall CRDs
-To delete the CRDs from the cluster:
+### Customize the code to enable webhook
 
-```sh
-make uninstall
-```
+* Uncomment `patches/webhook_in_immutablekinds.yaml` and `patches/cainjection_in_immutablekinds.yaml` in `config/crd/kustomization.yaml`
+* Uncomment `../certmanager` and `../webhook` directories in `config/default/kustomization.yaml`
+* Uncomment `manager_webhook_patch.yaml` in `config/default/kustomization.yaml`
+* Uncomment entire `CERTMANAGER` replacements block in `config/default/kustomization.yaml`
 
-### Undeploy controller
-UnDeploy the controller to the cluster:
+### Create custom CRDs & deploy the webhook
 
-```sh
-make undeploy
-```
-
-## Contributing
-// TODO(user): Add detailed information on how you would like others to contribute to this project
-
-### How it works
-This project aims to follow the Kubernetes [Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
-
-It uses [Controllers](https://kubernetes.io/docs/concepts/architecture/controller/) 
-which provides a reconcile function responsible for synchronizing resources untile the desired state is reached on the cluster 
-
-### Test It Out
-1. Install the CRDs into the cluster:
-
-```sh
-make install
-```
-
-2. Run your controller (this will run in the foreground, so switch to a new terminal if you want to leave it running):
-
-```sh
-make run
-```
-
-**NOTE:** You can also run this in one step by running: `make install run`
-
-### Modifying the API definitions
-If you are editing the API definitions, generate the manifests such as CRs or CRDs using:
-
-```sh
+```bash
 make manifests
+make docker-build docker-push IMG=rewanthtammana/immutablekindwebhook:v1
+make install deploy IMG=rewanthtammana/immutablekindwebhook:v1
 ```
 
-**NOTE:** Run `make --help` for more information on all potential `make` targets
+### Deploy sample CRD
 
-More information can be found via the [Kubebuilder Documentation](https://book.kubebuilder.io/introduction.html)
+```bash
+kubectl apply -f ./config/samples/validate_v1_immutablekind.yaml
+```
 
-## License
+Edit `immutablekind-sample`, remove all labels & try to deploy it. For example,
 
-Copyright 2022 rewanthtammana.
-
+```bash
+echo "apiVersion: validate.rewanthtammana.com/v1
+kind: ImmutableKind
+metadata:
+  name: immutablekind-sample" | kubectl apply -f-
+```
