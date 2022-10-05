@@ -50,7 +50,7 @@ func (r *ImmutableKind) ValidateUpdate(old runtime.Object) error {
 			Type:     field.ErrorTypeForbidden,
 			Field:    "*",
 			BadValue: r.Name,
-			Detail:   "Immutable property. Cannot be edited.",
+			Detail:   "Invalid value: \"object\": Value is immutable",
 		},
 	)
 }
