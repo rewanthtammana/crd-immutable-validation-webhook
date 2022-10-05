@@ -1,0 +1,27 @@
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  creationTimestamp: null
+  name: validating-webhook-configuration
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: webhook-service
+      namespace: system
+      path: /validate-validate-rewanthtammana-com-v1-immutablekind
+  failurePolicy: Fail
+  name: vimmutablekind.kb.io
+  rules:
+  - apiGroups:
+    - validate.rewanthtammana.com
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - immutablekinds
+  sideEffects: None

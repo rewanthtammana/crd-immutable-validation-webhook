@@ -1,0 +1,27 @@
+# permissions for end users to view immutablekinds.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: immutablekind-viewer-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: immutable-validation-webhook
+    app.kubernetes.io/part-of: immutable-validation-webhook
+    app.kubernetes.io/managed-by: kustomize
+  name: immutablekind-viewer-role
+rules:
+- apiGroups:
+  - validate.rewanthtammana.com
+  resources:
+  - immutablekinds
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - validate.rewanthtammana.com
+  resources:
+  - immutablekinds/status
+  verbs:
+  - get

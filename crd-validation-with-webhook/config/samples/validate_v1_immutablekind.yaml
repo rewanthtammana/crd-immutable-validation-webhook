@@ -1,0 +1,13 @@
+apiVersion: validate.rewanthtammana.com/v1
+kind: ImmutableKind
+metadata:
+  labels:
+    app.kubernetes.io/name: immutablekind
+    app.kubernetes.io/instance: immutablekind-sample
+    app.kubernetes.io/part-of: immutable-validation-webhook
+    app.kuberentes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: immutable-validation-webhook
+    mutate: maybe
+  name: immutablekind-sample
+spec:
+  # TODO(user): Add fields here

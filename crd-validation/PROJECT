@@ -1,0 +1,19 @@
+domain: rewanthtammana.com
+layout:
+- go.kubebuilder.io/v4-alpha
+projectName: crd-validation
+repo: github.com/rewanthtammana/crd-immutable-validation-webhook/crd-validation
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: rewanthtammana.com
+  group: validate
+  kind: ImmutableKind
+  path: github.com/rewanthtammana/crd-immutable-validation-webhook/crd-validation/api/v1
+  version: v1
+  webhooks:
+    validation: true
+    webhookVersion: v1
+version: "3"

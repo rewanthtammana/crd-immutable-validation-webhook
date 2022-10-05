@@ -1,0 +1,56 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.9.2
+  creationTimestamp: null
+  name: immutablekinds.validate.rewanthtammana.com
+spec:
+  group: validate.rewanthtammana.com
+  names:
+    kind: ImmutableKind
+    listKind: ImmutableKindList
+    plural: immutablekinds
+    singular: immutablekind
+  scope: Namespaced
+  versions:
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        description: ImmutableKind is the Schema for the immutablekinds API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ImmutableKindSpec defines the desired state of ImmutableKind
+            properties:
+              foo:
+                description: Foo is an example field of ImmutableKind. Edit immutablekind_types.go
+                  to remove/update
+                type: string
+            type: object
+            x-kubernetes-validations:
+            - message: Value is immutable spec
+              rule: self == oldSelf
+          status:
+            description: ImmutableKindStatus defines the observed state of ImmutableKind
+            type: object
+        type: object
+        x-kubernetes-validations:
+        - message: Value is immutable
+          rule: self == oldSelf
+    served: true
+    storage: true
+    subresources:
+      status: {}

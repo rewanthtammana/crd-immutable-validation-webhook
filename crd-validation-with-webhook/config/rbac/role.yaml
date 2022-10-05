@@ -1,0 +1,33 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: manager-role
+rules:
+- apiGroups:
+  - validate.rewanthtammana.com
+  resources:
+  - immutablekinds
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - validate.rewanthtammana.com
+  resources:
+  - immutablekinds/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - validate.rewanthtammana.com
+  resources:
+  - immutablekinds/status
+  verbs:
+  - get
+  - patch
+  - update
